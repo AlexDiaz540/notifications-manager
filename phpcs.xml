@@ -12,4 +12,5 @@
     <exclude-pattern>public/*</exclude-pattern>
     <exclude-pattern>*/migrations/*</exclude-pattern>
     <exclude-pattern>*/seeds/*</exclude-pattern>
+    <exclude-pattern>config/*</exclude-pattern>
 </ruleset>
