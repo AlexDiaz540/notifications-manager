@@ -3,7 +3,7 @@
 namespace NotificationsManager\Status\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class StatusControllerTest extends TestCase
 {
