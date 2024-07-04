@@ -1,0 +1,12 @@
+parameters:
+    level: 8
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        -
+            message: '#^Call to an undefined method Illuminate\\Contracts\\Routing\\ResponseFactory\|Illuminate\\Http\\Response\:\:json\(\)#'
+            path: */*Controller.php
+    excludePaths:
+        analyseAndScan:
+            - */Tests/*
+            - .php-cs-fixer.dist.php
+    checkGenericClassInNonGenericObjectType: false
