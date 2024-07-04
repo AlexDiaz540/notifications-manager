@@ -1,5 +1,5 @@
 <?php
 
 return [
-    App\Providers\AppServiceProvider::class,
+    NotificationsManager\Status\StatusServiceProvider::class,
 ];

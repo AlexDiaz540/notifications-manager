@@ -2,7 +2,7 @@
 
 namespace NotificationsManager\Status\Api\Routes;
 
-class StatusRoutes
-{
+use Illuminate\Support\Facades\Route;
+use NotificationsManager\Status\Api\Controllers\StatusControler;
 
-}
+Route::get('/status', StatusControler::class)->name('status');
