@@ -1,0 +1,30 @@
+grumphp:
+  process_timeout: 600
+  parallel:
+    enabled: false
+  fixer:
+    enabled: true
+    fix_by_default: true
+  tasks:
+    git_commit_message:
+      allow_empty_message: false
+      enforce_capitalized_subject: false
+      case_insensitive: false
+      max_subject_width: 100
+      matchers:
+        Must contain follow [1234] - Format: '/^\[[0-9]*\] - [A-Z][a-zA-Z\s]*/'
+    phpmd:
+      report_format: text
+      ruleset: ['cleancode', 'codesize', 'naming']
+    phpstan:
+      configuration: phpstan.neon
+      use_grumphp_paths: true
+    rector:
+      config: rector.php
+      no_diffs: false
+    phpcs:
+      standard: ['phpcs.xml']
+    phpcsfixer:
+      config: .php-cs-fixer.dist.php
+      allow_risky: true
+      using_cache: false
