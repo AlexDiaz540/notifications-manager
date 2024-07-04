@@ -9,7 +9,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/bootstrap',
         __DIR__ . '/config',
-        __DIR__ . '/laravel',
+        __DIR__ . '/notificationsManager',
         __DIR__ . '/public',
         __DIR__ . '/tests',
     ])
