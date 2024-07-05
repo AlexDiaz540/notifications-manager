@@ -10,7 +10,7 @@ class ActualizarOperariosTest extends TestCase
     #[Test]
     public function testActualizarOperarios(): void
     {
-        $this->artisan('notifications:actualizarOperarios')
-            ->expectsOutput('Funciona Correctamente');
+        $this->artisan('update:operarios')
+            ->expectsOutput('Sequence Number: 12341234');
     }
 }
