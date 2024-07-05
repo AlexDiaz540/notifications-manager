@@ -2,9 +2,11 @@
 
 namespace NotificationsManager\Operarios\Commands;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http as HttpClient;
+use NotificationsManager\Operarios\Database\Entities\Operator;
 
 class ActualizarOperarios extends Command
 {
@@ -13,11 +15,13 @@ class ActualizarOperarios extends Command
     protected $description = 'Actualiza los datos de los operarios';
 
     private HttpClient $httpClient;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(HttpClient $httpClient)
+    public function __construct(HttpClient $httpClient, EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->httpClient = $httpClient;
+        $this->entityManager = $entityManager;
     }
 
     public function handle(): void
@@ -51,9 +55,12 @@ class ActualizarOperarios extends Command
 
         $response = $this->httpClient::get($url);
         $operatorsInfo = $response->json();
-        try {
-            $this->line(json_encode($operatorsInfo, JSON_THROW_ON_ERROR));
-        } catch (Exception $e) {
-        }
+        $operator = new Operator();
+        $operator->setOperator($operatorsInfo[0]);
+
+        $this->entityManager->persist($operator);
+        $this->entityManager->flush();
+
+        $this->info('Operarios actualizados');
     }
 }
