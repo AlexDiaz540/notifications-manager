@@ -11,6 +11,6 @@ class ActualizarOperariosTest extends TestCase
     public function testActualizarOperarios(): void
     {
         $this->artisan('notifications:actualizarOperarios')
-            ->expectsOutput('No funciona');
+            ->expectsOutput('Funciona Correctamente');
     }
 }
