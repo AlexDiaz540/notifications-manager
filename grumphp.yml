@@ -15,7 +15,7 @@ grumphp:
         Must contain follow [1234] - Format: '/^\[[0-9]*\] - [A-Z][a-zA-Z\s]*/'
     phpmd:
       report_format: text
-      ruleset: ['cleancode', 'codesize', 'naming']
+      ruleset: ['phpmd-ruleset.xml']
     phpstan:
       configuration: phpstan.neon
       use_grumphp_paths: true
