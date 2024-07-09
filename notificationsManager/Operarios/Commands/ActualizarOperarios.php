@@ -26,47 +26,60 @@ class ActualizarOperarios extends Command
 
     public function handle(): void
     {
-        $url = 'https://api.extexnal.com/operators/?sequence_number=12341234';
-        $data = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 26,
-                'id' => 2,
-                'name' => '654654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
+        try {
+            $url = 'https://api.extexnal.com/operators/?sequence_number=12341234';
+            $data = [
+                [
+                    'sequenceNumber' => 1510105,
+                    'journalEntryType' => 'UP',
+                    'customerId' => 26,
+                    'id' => 2,
+                    'name' => '654654',
+                    'surname1' => '',
+                    'surname2' => '',
+                    'phone' => 0,
+                    'email' => '',
+                    'orderNotifications' => false,
+                    'orderNotificationEmail' => '',
+                    'orderNotificationByEmail' => false,
+                    'orderNotificationBySms' => false,
+                    'orderNotificationByPush' => false,
+                    'deleted' => true,
+                    'object' => 'SALQ9U',
+                    'objectSchema' => 'IQSFCOMUN'
+                ]
+            ];
 
-        $this->httpClient::fake([
-            $url => $this->httpClient::response($data, 200)
-        ]);
+            $this->httpClient::fake([
+                $url => $this->httpClient::response($data, 200)
+            ]);
 
-        $response = $this->httpClient::get($url);
-        $operatorsInfo = $response->json();
-        $operator = new Operator();
-        $operator->setOperator($operatorsInfo[0]);
+            $response = $this->httpClient::get($url);
+            if ($response->failed()) {
+                throw new Exception('Failed to retrieve operators.', 500);
+            }
 
-        $this->entityManager->persist($operator);
-        $this->entityManager->flush();
+            $operatorsInfo = $response->json();
+            $operator = new Operator();
+            $operator->setOperator($operatorsInfo[0]);
 
-        $response = [
-            'message' => 'Operators updated successfully.'
-        ];
+            $this->entityManager->persist($operator);
+            $this->entityManager->flush();
 
-        $jsonResponse = json_encode($response, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            $response = [
+                'message' => 'Operators updated successfully.'
+            ];
 
-        $this->info($jsonResponse);
+            $jsonResponse = json_encode($response, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+
+            $this->info($jsonResponse);
+        } catch (Exception $exception) {
+            $response = [
+                'message' => $exception->getMessage()
+            ];
+
+            $jsonResponse = json_encode($response, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            $this->error($jsonResponse);
+        }
     }
 }
