@@ -4,19 +4,34 @@ namespace NotificationsManager\Operarios\Tests\Feature;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ActualizarOperariosTest extends TestCase
 {
+    use RefreshDatabase;
+
     #[Test]
     public function testActualizarOperarios(): void
     {
-        $expectedResponse = '[{"sequenceNumber":1510105,"journalEntryType":"UP","customerId":26,"id":2,"name":"654654",
-            "surname1":"","surname2":"","phone":0,"email":"","orderNotifications":false,"orderNotificationEmail":"",
-            "orderNotificationByEmail":false,"orderNotificationBySms":false,"orderNotificationByPush":false,
-            "deleted":true,"object":"SALQ9U","objectSchema":"IQSFCOMUN"}]';
+        $userData = [
+            'customer_id' => 26,
+            'id' => 2,
+            'name' => '654654',
+            'surname_1' => '',
+            'surname_2' => '',
+            'phone' => 0,
+            'email' => '',
+            'order_notifications_enabled' => false,
+            'order_notifications_email' => '',
+            'order_notifications_by_email' => false,
+            'order_notifications_by_sms' => false,
+            'order_notifications_by_push' => false,
+            'deleted' => true,
+        ];
+        $expectedResponse = 'Operarios actualizados';
 
-        $expectedResponse = str_replace(["\r", "\n", "\t", " "], '', $expectedResponse);
         $this->artisan('update:operarios')
             ->expectsOutput($expectedResponse);
+        $this->assertDatabaseHas('operators', $userData);
     }
 }
