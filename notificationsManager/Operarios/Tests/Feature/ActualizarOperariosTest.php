@@ -72,7 +72,7 @@ class ActualizarOperariosTest extends TestCase
         $this->httpClient::fake([
             'https://api.extexnal.com/operators/*' => $this->httpClient::response($data, 200)
         ]);
-        $expectedResponse = json_encode(['message' => "Failed to retrieve operators."]);
+        $expectedResponse = json_encode(['message' => "Failed to update operators."]);
 
         $this->artisan('update:operarios')
             ->expectsOutput($expectedResponse);
