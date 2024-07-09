@@ -57,14 +57,20 @@ class ActualizarOperariosTest extends TestCase
 
     public function testWhenApiFails(): void
     {
-        $this->response
-            ->shouldReceive('failed')
-            ->with()
-            ->once()
-            ->andReturn(true);
-
         $this->httpClient::fake([
             'https://api.extexnal.com/operators/*' => $this->httpClient::response([], 500)
+        ]);
+        $expectedResponse = json_encode(['message' => "Failed to retrieve operators."]);
+
+        $this->artisan('update:operarios')
+            ->expectsOutput($expectedResponse);
+    }
+
+    public function testWhenDataBaseFails(): void
+    {
+        $data = [];
+        $this->httpClient::fake([
+            'https://api.extexnal.com/operators/*' => $this->httpClient::response($data, 200)
         ]);
         $expectedResponse = json_encode(['message' => "Failed to retrieve operators."]);
 

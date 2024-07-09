@@ -61,11 +61,14 @@ class ActualizarOperarios extends Command
 
             $operatorsInfo = $response->json();
             $operator = new Operator();
-            $operator->setOperator($operatorsInfo[0]);
 
-            $this->entityManager->persist($operator);
-            $this->entityManager->flush();
-
+            try {
+                $operator->setOperator($operatorsInfo[0]);
+                $this->entityManager->persist($operator);
+                $this->entityManager->flush();
+            } catch (Exception $e) {
+                throw new Exception('Failed to update operators.', 500);
+            }
             $response = [
                 'message' => 'Operators updated successfully.'
             ];
