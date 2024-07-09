@@ -28,7 +28,7 @@ class ActualizarOperariosTest extends TestCase
             'order_notifications_by_push' => false,
             'deleted' => true,
         ];
-        $expectedResponse = 'Operarios actualizados';
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.']);
 
         $this->artisan('update:operarios')
             ->expectsOutput($expectedResponse);

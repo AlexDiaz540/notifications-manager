@@ -61,6 +61,12 @@ class ActualizarOperarios extends Command
         $this->entityManager->persist($operator);
         $this->entityManager->flush();
 
-        $this->info('Operarios actualizados');
+        $response = [
+            'message' => 'Operators updated successfully.'
+        ];
+
+        $jsonResponse = json_encode($response, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+
+        $this->info($jsonResponse);
     }
 }
