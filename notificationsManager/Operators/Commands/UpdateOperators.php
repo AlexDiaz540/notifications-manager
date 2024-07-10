@@ -1,13 +1,13 @@
 <?php
 
-namespace NotificationsManager\Operarios\Commands;
+namespace NotificationsManager\Operators\Commands;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http as HttpClient;
-use NotificationsManager\Operarios\Database\Entities\Operator;
+use NotificationsManager\Operators\Database\Entities\Operator;
 
 class UpdateOperators extends Command
 {

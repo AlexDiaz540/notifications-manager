@@ -2,5 +2,5 @@
 
 return [
     NotificationsManager\Status\StatusServiceProvider::class,
-    NotificationsManager\Operarios\OperariosServiceProviders::class,
+    NotificationsManager\Operators\OperatorsServiceProviders::class,
 ];

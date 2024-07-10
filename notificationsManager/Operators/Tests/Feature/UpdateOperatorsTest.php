@@ -1,13 +1,13 @@
 <?php
 
-namespace NotificationsManager\Operarios\Tests\Feature;
+namespace NotificationsManager\Operators\Tests\Feature;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http as HttpClient;
 use Mockery\Container;
-use NotificationsManager\Operarios\Commands\UpdateOperators;
+use NotificationsManager\Operators\Commands\UpdateOperators;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;

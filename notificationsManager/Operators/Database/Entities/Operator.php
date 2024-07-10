@@ -1,6 +1,6 @@
 <?php
 
-namespace NotificationsManager\Operarios\Database\Entities;
+namespace NotificationsManager\Operators\Database\Entities;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
