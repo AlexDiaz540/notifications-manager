@@ -91,11 +91,9 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
-
         $this->httpClient::fake([
             'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
         ]);
-
         $this->mock(EntityManagerInterface::class, function ($mock) {
             $mock->shouldReceive('persist')->andThrow(new Exception('Database error'));
             $mock->shouldReceive('flush')->andThrow(new Exception('Database error'));
@@ -122,11 +120,9 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
-
         $this->httpClient::fake([
             'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
         ]);
-
         $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
 
         $this->artisan('update:operators')
