@@ -13,6 +13,5 @@ class StatusServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-
     }
 }
