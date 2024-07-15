@@ -1,22 +1,22 @@
 <?php
 
-namespace NotificationsManager\Notifications\Api\Controllers;
+namespace NotificationsManager\PendingNotifications\Api\Controllers;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use NotificationsManager\Notifications\Database\Entities\PendingNotification;
+use NotificationsManager\PendingNotifications\Database\Entities\PendingNotification;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
-use NotificationsManager\Notifications\Api\Requests\NotificationAddRequest;
+use NotificationsManager\PendingNotifications\Api\Requests\PendingNotificationAddRequest;
 
-class NotificationsController
+class PendingNotificationsController
 {
     private EntityManagerInterface $entityManager;
     private PendingNotification $pendingNotification;
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param PendingNotification $pendingNotification
      */
     public function __construct(EntityManagerInterface $entityManager, PendingNotification $pendingNotification)
     {
@@ -24,7 +24,7 @@ class NotificationsController
         $this->pendingNotification = $pendingNotification;
     }
 
-    public function __invoke(NotificationAddRequest $request): JsonResponse
+    public function __invoke(PendingNotificationAddRequest $request): JsonResponse
     {
         try {
             $pendingNotificationData = $request->all();

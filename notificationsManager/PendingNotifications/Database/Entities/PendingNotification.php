@@ -1,6 +1,6 @@
 <?php
 
-namespace NotificationsManager\Notifications\Database\Entities;
+namespace NotificationsManager\PendingNotifications\Database\Entities;
 
 use DateTime;
 use DateTimeInterface;

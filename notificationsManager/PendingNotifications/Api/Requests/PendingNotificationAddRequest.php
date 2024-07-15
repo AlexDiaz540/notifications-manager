@@ -1,12 +1,12 @@
 <?php
 
-namespace NotificationsManager\Notifications\Api\Requests;
+namespace NotificationsManager\PendingNotifications\Api\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class NotificationAddRequest extends FormRequest
+class PendingNotificationAddRequest extends FormRequest
 {
     public function authorize(): true
     {
