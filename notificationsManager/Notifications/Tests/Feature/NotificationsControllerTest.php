@@ -19,7 +19,6 @@ class NotificationsControllerTest extends TestCase
     public function notificationsAddTest(): void
     {
         $expectedResponse = '{"message":"Pending notification added successfully."}';
-
         $notificationData = [
             'id' => null,
             'customerId' => '12345',
@@ -48,12 +47,13 @@ class NotificationsControllerTest extends TestCase
     public function notificationsAddTestWithBadFormatRequest(): void
     {
         $expectedResponse = '{"message":"Invalid request format."}';
-
-        $response = $this->post(route('addNotification'), [
+        $notificationData = [
             'id' => null,
             'customerId' => '12345',
             'createdDate' => '2024-07-03T10:00:00Z'
-        ]);
+        ];
+
+        $response = $this->post(route('addNotification'), $notificationData);
 
         $response->assertStatus(400);
         $response->assertContent($expectedResponse);
@@ -71,7 +71,6 @@ class NotificationsControllerTest extends TestCase
             'messageType' => 'INFO',
             'createdDate' => '2024-07-03T10:00:00Z'
         ];
-
         $this->mock(EntityManagerInterface::class, function ($mock) {
             $mock->shouldReceive('persist')->andThrow(new Exception('Database error'));
             $mock->shouldReceive('flush')->andThrow(new Exception('Database error'));
