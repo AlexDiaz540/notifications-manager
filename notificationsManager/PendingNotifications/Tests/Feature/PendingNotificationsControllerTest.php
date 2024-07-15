@@ -42,7 +42,7 @@ class PendingNotificationsControllerTest extends TestCase
     }
 
     #[Test]
-    public function testWithBadFormatRequest(): void
+    public function notificationsAddTestWithBadFormatRequest(): void
     {
         $expectedResponse = '{"message":"Invalid request format."}';
         $notificationData = [
@@ -58,7 +58,7 @@ class PendingNotificationsControllerTest extends TestCase
     }
 
     #[Test]
-    public function testWithEntityManagerError(): void
+    public function notificationsAddWithEntityManagerError(): void
     {
         $expectedResponse = '{"message":"Failed to add pending notification."}';
         $notificationData = [
@@ -81,7 +81,7 @@ class PendingNotificationsControllerTest extends TestCase
     }
 
     #[Test]
-    public function testWithEntityError(): void
+    public function notificationsAddTestWithEntityError(): void
     {
         $expectedResponse = '{"message":"Failed to add pending notification."}';
         $notificationData = [
