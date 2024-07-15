@@ -95,6 +95,9 @@ class NotificationsControllerTest extends TestCase
             'messageType' => 'INFO',
             'createdDate' => '2024-07-03T10:00:00Z'
         ];
+        $this->mock(PendingNotification::class, function ($mock) {
+            $mock->shouldReceive('setPendingNotification')->andThrow(new Exception('Entity error'));
+        });
 
         $response = $this->post(route('addNotification'), $notificationData);
 
