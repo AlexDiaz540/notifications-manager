@@ -12,11 +12,11 @@ return new class () extends Migration {
     {
         Schema::create('pending_notifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('customerId');
-            $table->integer('operatorId');
-            $table->string('orderNumber');
-            $table->string('messageType');
-            $table->timestamp('createdDate');
+            $table->string('customer_id');
+            $table->integer('operator_id');
+            $table->string('order_number');
+            $table->string('message_type');
+            $table->timestamp('created_date');
             $table->timestamps();
         });
     }
