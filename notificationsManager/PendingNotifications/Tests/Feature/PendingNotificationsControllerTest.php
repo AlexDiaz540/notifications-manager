@@ -14,7 +14,7 @@ class PendingNotificationsControllerTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function testNotificationsAddSuccesful(): void
+    public function testNotificationsAddSuccessful(): void
     {
         $expectedResponse = '{"message":"Pending notification added successfully."}';
         $notificationData = [
