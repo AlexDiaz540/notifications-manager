@@ -1,22 +1,20 @@
 <?php
 
-namespace NotificationsManager\Notifications\Tests\Feature;
+namespace NotificationsManager\PendingNotifications\Tests\Feature;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery\Container;
-use NotificationsManager\Notifications\Api\Controllers\NotificationsController;
-use NotificationsManager\Notifications\Database\Entities\PendingNotification;
+use NotificationsManager\PendingNotifications\Database\Entities\PendingNotification;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class NotificationsControllerTest extends TestCase
+class PendingNotificationsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     #[Test]
-    public function notificationsAddTest(): void
+    public function testNotificationsAddSuccesfull(): void
     {
         $expectedResponse = '{"message":"Pending notification added successfully."}';
         $notificationData = [
@@ -44,7 +42,7 @@ class NotificationsControllerTest extends TestCase
     }
 
     #[Test]
-    public function notificationsAddTestWithBadFormatRequest(): void
+    public function testWithBadFormatRequest(): void
     {
         $expectedResponse = '{"message":"Invalid request format."}';
         $notificationData = [
@@ -60,7 +58,7 @@ class NotificationsControllerTest extends TestCase
     }
 
     #[Test]
-    public function notificationsAddWithEntityManagerError(): void
+    public function testWithEntityManagerError(): void
     {
         $expectedResponse = '{"message":"Failed to add pending notification."}';
         $notificationData = [
@@ -83,7 +81,7 @@ class NotificationsControllerTest extends TestCase
     }
 
     #[Test]
-    public function notificationsAddTestWithEntityError(): void
+    public function testWithEntityError(): void
     {
         $expectedResponse = '{"message":"Failed to add pending notification."}';
         $notificationData = [
