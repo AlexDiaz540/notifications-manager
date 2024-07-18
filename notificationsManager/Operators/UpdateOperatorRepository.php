@@ -14,10 +14,8 @@ class UpdateOperatorRepository implements OperatorRepository
     {
         $this->entityManager = $entityManager;
     }
-    public function save(array $operatorData): void
+    public function save(Operator $operator): void
     {
-        $operator = new Operator();
-        $operator->setOperator($operatorData);
         $this->entityManager->persist($operator);
         $this->entityManager->flush();
     }

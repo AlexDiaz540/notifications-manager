@@ -3,6 +3,7 @@
 namespace NotificationsManager\Operators;
 
 use Exception;
+use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\Repositories\OperatorRepository;
 
 class OperatorsService
@@ -21,7 +22,9 @@ class OperatorsService
     public function updateOperator(array $operatorData): void
     {
         try {
-            $this->operatorRepository->save($operatorData);
+            $operator = new Operator();
+            $operator->setOperator($operatorData);
+            $this->operatorRepository->save($operator);
         } catch (Exception $e) {
             throw new Exception('Failed to update operator data.', 400);
         }
