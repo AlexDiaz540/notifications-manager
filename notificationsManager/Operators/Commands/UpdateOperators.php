@@ -2,25 +2,24 @@
 
 namespace NotificationsManager\Operators\Commands;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http as HttpClient;
-use NotificationsManager\Operators\Database\Entities\Operator;
+use NotificationsManager\Operators\OperatorsService;
 
 class UpdateOperators extends Command
 {
     protected $signature = 'update:operators';
     protected $description = 'Actualiza los datos de los operarios';
     private HttpClient $httpClient;
-    private EntityManagerInterface $entityManager;
 
-    public function __construct(HttpClient $httpClient, EntityManagerInterface $entityManager)
+    private OperatorsService $operatorsService;
+
+    public function __construct(HttpClient $httpClient, OperatorsService $operatorsService)
     {
         parent::__construct();
         $this->httpClient = $httpClient;
-        $this->entityManager = $entityManager;
+        $this->operatorsService = $operatorsService;
     }
 
     public function handle(): int
@@ -56,38 +55,23 @@ class UpdateOperators extends Command
             $response = $this->httpClient::get($url);
 
             if ($response->failed()) {
-                throw new RequestException($response);
+                throw new Exception($response, 500);
             }
 
             $operatorsInfo = $response->json();
 
-            $this->updateOperator($operatorsInfo[0]);
+            $this->operatorsService->updateOperator($operatorsInfo[0]);
 
             $this->info(json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
             return 0;
-        } catch (RequestException $exception) {
-            $this->error(json_encode(['message' => 'Failed to retrieve operators.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
-            return 1;
         } catch (Exception $exception) {
-            $this->error(json_encode(['message' => 'Failed to update operators.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+            if ($exception->getCode() === 500) {
+                $this->error(json_encode(['message' => 'Failed to retrieve operators.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+            }
+            if ($exception->getCode() === 400) {
+                $this->error(json_encode(['message' => 'Failed to update operators.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+            }
             return 1;
-        }
-    }
-
-    /**
-     * @param array<int> $operatorData
-     * @return void
-     * @throws Exception
-     */
-    private function updateOperator(array $operatorData): void
-    {
-        try {
-            $operator = new Operator();
-            $operator->setOperator($operatorData);
-            $this->entityManager->persist($operator);
-            $this->entityManager->flush();
-        } catch (Exception $e) {
-            throw new Exception('Failed to update operator data.', 500);
         }
     }
 }
