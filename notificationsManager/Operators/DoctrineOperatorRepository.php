@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\Repositories\OperatorRepository;
 
-class UpdateOperatorRepository implements OperatorRepository
+class DoctrineOperatorRepository implements OperatorRepository
 {
     private EntityManagerInterface $entityManager;
 

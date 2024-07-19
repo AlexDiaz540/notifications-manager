@@ -89,6 +89,27 @@ class Operator
     protected datetime $updatedAt;
 
     /**
+     * @param array<int> $data
+     * @return void
+     */
+    public function __construct(array $data)
+    {
+        $this->setId($data['id']);
+        $this->setCustomerId($data['customerId'] ?? null);
+        $this->setName($data['name'] ?? null);
+        $this->setSurname1($data['surname1'] ?? null);
+        $this->setSurname2($data['surname2'] ?? null);
+        $this->setPhone($data['phone'] ?? null);
+        $this->setEmail($data['email'] ?? null);
+        $this->setOrderNotificationsEnabled($data['orderNotificationsEnabled'] ?? false);
+        $this->setOrderNotificationsEmail($data['orderNotificationsEmail'] ?? '');
+        $this->setOrderNotificationsByEmail($data['orderNotificationsByEmail'] ?? false);
+        $this->setOrderNotificationsBySms($data['orderNotificationsBySms'] ?? false);
+        $this->setOrderNotificationsByPush($data['orderNotificationsByPush'] ?? false);
+        $this->setDeleted($data['deleted'] ?? false);
+    }
+
+    /**
      * @param mixed $id
      */
     public function setId($id): void
@@ -206,27 +227,5 @@ class Operator
     public function setUpdatedAt($updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-    }
-
-
-    /**
-     * @param array<int> $data
-     * @return void
-     */
-    public function setOperator(array $data): void
-    {
-        $this->setId($data['id']);
-        $this->setCustomerId($data['customerId'] ?? null);
-        $this->setName($data['name'] ?? null);
-        $this->setSurname1($data['surname1'] ?? null);
-        $this->setSurname2($data['surname2'] ?? null);
-        $this->setPhone($data['phone'] ?? null);
-        $this->setEmail($data['email'] ?? null);
-        $this->setOrderNotificationsEnabled($data['orderNotificationsEnabled'] ?? false);
-        $this->setOrderNotificationsEmail($data['orderNotificationsEmail'] ?? '');
-        $this->setOrderNotificationsByEmail($data['orderNotificationsByEmail'] ?? false);
-        $this->setOrderNotificationsBySms($data['orderNotificationsBySms'] ?? false);
-        $this->setOrderNotificationsByPush($data['orderNotificationsByPush'] ?? false);
-        $this->setDeleted($data['deleted'] ?? false);
     }
 }
