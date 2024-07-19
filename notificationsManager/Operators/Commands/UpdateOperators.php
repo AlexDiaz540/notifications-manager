@@ -4,7 +4,6 @@ namespace NotificationsManager\Operators\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http as HttpClient;
 use NotificationsManager\Operators\GetOperatorService;
 use NotificationsManager\Operators\UpdateOperatorsService;
 
@@ -25,11 +24,9 @@ class UpdateOperators extends Command
 
     public function handle(): int
     {
-
         try {
             $operators = $this->getOperatorService->getOperators();
             $this->updateOperatorsService->update($operators[0]);
-
             $this->info(json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
             return 0;
         } catch (Exception $exception) {
