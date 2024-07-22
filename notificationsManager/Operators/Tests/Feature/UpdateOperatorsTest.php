@@ -31,7 +31,7 @@ class UpdateOperatorsTest extends TestCase
             ->give(fn () => $this->response);
     }
     #[Test]
-    public function testUpdateOperatorsSuccessful(): void
+    public function updateOneOperator(): void
     {
         $operatorData = [
             'customer_id' => 26,
@@ -56,7 +56,112 @@ class UpdateOperatorsTest extends TestCase
         $this->assertDatabaseHas('operators', $operatorData);
     }
 
-    public function testWhenApiFails(): void
+    #[Test]
+    public function updateMultipleOperators(): void
+    {
+        $operatorsData = [
+            [
+                'sequenceNumber' => 1510105,
+                'journalEntryType' => 'UP',
+                'customerId' => 22,
+                'id' => 4,
+                'name' => '674654',
+                'surname1' => '',
+                'surname2' => '',
+                'phone' => 0,
+                'email' => '',
+                'orderNotifications' => false,
+                'orderNotificationEmail' => '',
+                'orderNotificationByEmail' => false,
+                'orderNotificationBySms' => false,
+                'orderNotificationByPush' => false,
+                'deleted' => true,
+                'object' => 'SALQ9U',
+                'objectSchema' => 'IQSFCOMUN'
+            ],
+            [
+                'sequenceNumber' => 1510133,
+                'journalEntryType' => 'UP',
+                'customerId' => 23,
+                'id' => 3,
+                'name' => '654234',
+                'surname1' => '',
+                'surname2' => '',
+                'phone' => 0,
+                'email' => '',
+                'orderNotifications' => false,
+                'orderNotificationEmail' => '',
+                'orderNotificationByEmail' => false,
+                'orderNotificationBySms' => false,
+                'orderNotificationByPush' => false,
+                'deleted' => true,
+                'object' => 'SALQ9U',
+                'objectSchema' => 'IQSFCOMUN'
+            ]
+        ];
+
+        $operatorsInDatabase = [
+            [
+                'customer_id' => 22,
+                'id' => 4,
+                'name' => '674654',
+                'surname_1' => '',
+                'surname_2' => '',
+                'phone' => 0,
+                'email' => '',
+                'order_notifications_enabled' => false,
+                'order_notifications_email' => '',
+                'order_notifications_by_email' => false,
+                'order_notifications_by_sms' => false,
+                'order_notifications_by_push' => false,
+                'deleted' => true,
+            ],
+            [
+                'customer_id' => 23,
+                'id' => 3,
+                'name' => '654234',
+                'surname_1' => '',
+                'surname_2' => '',
+                'phone' => 0,
+                'email' => '',
+                'order_notifications_enabled' => false,
+                'order_notifications_email' => '',
+                'order_notifications_by_email' => false,
+                'order_notifications_by_sms' => false,
+                'order_notifications_by_push' => false,
+                'deleted' => true,
+            ]
+        ];
+
+        $this->httpClient::fake([
+            'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
+        ]);
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
+
+        $this->artisan('update:operators')
+            ->expectsOutput($expectedResponse)
+            ->assertExitCode(0);
+        foreach ($operatorsInDatabase as $operator) {
+            $this->assertDatabaseHas('operators', $operator);
+        }
+    }
+
+    #[Test]
+    public function updateOperatorsWithNoOperatorsReceived(): void
+    {
+        $operatorsData = [];
+        $this->httpClient::fake([
+            'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
+        ]);
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
+
+        $this->artisan('update:operators')
+            ->expectsOutput($expectedResponse)
+            ->assertExitCode(0);
+    }
+
+    #[Test]
+    public function updateOpertatorsWhenApiRequestFails(): void
     {
         $this->httpClient::fake([
             'https://api.extexnal.com/operators/*' => $this->httpClient::response([], 500)
@@ -68,7 +173,8 @@ class UpdateOperatorsTest extends TestCase
             ->assertExitCode(1);
     }
 
-    public function testWhenInsertingInDataBaseFails(): void
+    #[Test]
+    public function updateOperatorsWhenInsertInDataBaseFails(): void
     {
         $operatorsData = [
             [
@@ -105,7 +211,8 @@ class UpdateOperatorsTest extends TestCase
             ->assertExitCode(1);
     }
 
-    public function testWhenSettingEntityOperator(): void
+    #[Test]
+    public function updateOperatorsWhenCreateEntityOperatorFails(): void
     {
         $operatorsData = [
             [
