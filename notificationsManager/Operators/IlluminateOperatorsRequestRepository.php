@@ -5,6 +5,7 @@ namespace NotificationsManager\Operators;
 use Exception;
 use Illuminate\Support\Facades\Http as HttpClient;
 use NotificationsManager\Operators\Repositories\OperatorsRequestRepository;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class IlluminateOperatorsRequestRepository implements OperatorsRequestRepository
 {
@@ -46,7 +47,7 @@ class IlluminateOperatorsRequestRepository implements OperatorsRequestRepository
         $response = $this->httpClient::get(self::URL);
 
         if ($response->failed()) {
-            throw new Exception($response, 500);
+            throw new Exception($response, ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response->json();
