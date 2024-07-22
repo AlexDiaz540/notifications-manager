@@ -22,8 +22,10 @@ readonly class UpdateOperatorsService
     {
         $operatorsData = $this->operatorsRequestRepository->getOperators();
         try {
-            $operator = new Operator($operatorsData[0]);
-            $this->operatorRepository->save($operator);
+            foreach ($operatorsData as $operatorData) {
+                $operator = new Operator($operatorData);
+                $this->operatorRepository->save($operator);
+            }
         } catch (Exception $e) {
             throw new Exception('Failed to update operator data.', 400);
         }
