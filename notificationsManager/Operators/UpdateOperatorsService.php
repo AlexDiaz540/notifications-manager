@@ -5,21 +5,24 @@ namespace NotificationsManager\Operators;
 use Exception;
 use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\Repositories\OperatorRepository;
+use NotificationsManager\Operators\Repositories\OperatorsRequestRepository;
 
-class UpdateOperatorsService
+readonly class UpdateOperatorsService
 {
-    public function __construct(private readonly OperatorRepository $operatorRepository)
-    {
+    public function __construct(
+        private OperatorRepository $operatorRepository,
+        private OperatorsRequestRepository $operatorsRequestRepository
+    ) {
     }
 
     /**
-     * @param array<int> $operatorData
      * @throws Exception
      */
-    public function update(array $operatorData): void
+    public function update(): void
     {
+        $operatorsData = $this->operatorsRequestRepository->getOperators();
         try {
-            $operator = new Operator($operatorData);
+            $operator = new Operator($operatorsData[0]);
             $this->operatorRepository->save($operator);
         } catch (Exception $e) {
             throw new Exception('Failed to update operator data.', 400);

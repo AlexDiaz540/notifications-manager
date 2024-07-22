@@ -4,7 +4,6 @@ namespace NotificationsManager\Operators\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use NotificationsManager\Operators\GetOperatorService;
 use NotificationsManager\Operators\UpdateOperatorsService;
 
 class UpdateOperators extends Command
@@ -13,20 +12,17 @@ class UpdateOperators extends Command
     protected $description = 'Actualiza los datos de los operarios';
 
     private UpdateOperatorsService $updateOperatorsService;
-    private GetOperatorService $getOperatorService;
 
-    public function __construct(UpdateOperatorsService $updateOperatorsService, getOperatorService $getOperatorService)
+    public function __construct(UpdateOperatorsService $updateOperatorsService)
     {
         parent::__construct();
         $this->updateOperatorsService = $updateOperatorsService;
-        $this->getOperatorService = $getOperatorService;
     }
 
     public function handle(): int
     {
         try {
-            $operators = $this->getOperatorService->getOperators();
-            $this->updateOperatorsService->update($operators[0]);
+            $this->updateOperatorsService->update();
             $this->info(json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
             return 0;
         } catch (Exception $exception) {

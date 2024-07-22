@@ -4,18 +4,15 @@ namespace NotificationsManager\Operators;
 
 use Exception;
 use Illuminate\Support\Facades\Http as HttpClient;
+use NotificationsManager\Operators\Repositories\OperatorsRequestRepository;
 
-class GetOperatorService
+class IlluminateOperatorsRequestRepository implements OperatorsRequestRepository
 {
-    public const string URL = 'https://api.extexnal.com/operators/?sequence_number=12341234';
-
     private HttpClient $httpClient;
-
-    public function __construct(HttpClient $httpClient)
+    public function __construct()
     {
-        $this->httpClient = $httpClient;
+        $this->httpClient = new HttpClient();
     }
-
     /**
      * @return array<array<string, mixed>>
      * @throws Exception
