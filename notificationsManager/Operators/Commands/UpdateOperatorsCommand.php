@@ -7,17 +7,14 @@ use Illuminate\Console\Command;
 use NotificationsManager\Operators\UpdateOperatorsService;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class UpdateOperators extends Command
+class UpdateOperatorsCommand extends Command
 {
     protected $signature = 'update:operators';
     protected $description = 'Actualiza los datos de los operarios';
 
-    private UpdateOperatorsService $updateOperatorsService;
-
-    public function __construct(UpdateOperatorsService $updateOperatorsService)
+    public function __construct(private readonly UpdateOperatorsService $updateOperatorsService)
     {
         parent::__construct();
-        $this->updateOperatorsService = $updateOperatorsService;
     }
 
     public function handle(): int
@@ -28,10 +25,10 @@ class UpdateOperators extends Command
             return 0;
         } catch (Exception $exception) {
             if ($exception->getCode() === ResponseAlias::HTTP_INTERNAL_SERVER_ERROR) {
-                $this->error(json_encode(['message' => 'Failed to retrieve operators.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+                $this->error(json_encode(['message' => $exception->getMessage()], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
             }
             if ($exception->getCode() === ResponseAlias::HTTP_BAD_REQUEST) {
-                $this->error(json_encode(['message' => 'Failed to update operators.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+                $this->error(json_encode(['message' => $exception->getMessage()], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
             }
             return 1;
         }

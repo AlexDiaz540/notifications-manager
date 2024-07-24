@@ -4,18 +4,21 @@ namespace NotificationsManager\Operators;
 
 use Exception;
 use Illuminate\Support\Facades\Http as HttpClient;
-use NotificationsManager\Operators\Repositories\OperatorsRequestRepository;
+use NotificationsManager\Operators\Database\Entities\Operator;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class IlluminateOperatorsRequestRepository implements OperatorsRequestRepository
+class OperatorsApiDataSource
 {
+    public const string URL = 'https://api.extexnal.com/operators/?sequence_number=12341234';
     private HttpClient $httpClient;
+
     public function __construct()
     {
         $this->httpClient = new HttpClient();
     }
+
     /**
-     * @return array<array<string, mixed>>
+     * @return array<Operator>
      * @throws Exception
      */
     public function getOperators(): array
@@ -44,12 +47,21 @@ class IlluminateOperatorsRequestRepository implements OperatorsRequestRepository
         $this->httpClient::fake([
             self::URL => $this->httpClient::response($operatorData, 200)
         ]);
+
         $response = $this->httpClient::get(self::URL);
-
         if ($response->failed()) {
-            throw new Exception($response, ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('Failed to retrieve operators.', ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
         }
+        try {
+            $operatorsDate = $response->json();
 
-        return $response->json();
+            $operators = [];
+            foreach ($operatorsDate as $operatorData) {
+                $operators[] = new Operator($operatorData);
+            }
+            return $operators;
+        } catch (Exception $e) {
+            throw new Exception('Failed to update operators.', 400);
+        }
     }
 }
