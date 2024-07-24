@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http as HttpClient;
 use Mockery\Container;
-use NotificationsManager\Operators\Commands\UpdateOperators;
+use NotificationsManager\Operators\Commands\UpdateOperatorsCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,7 +26,7 @@ class UpdateOperatorsTest extends TestCase
         $this->httpClient = new HttpClient();
         $this->response = $mockeryContainer->mock(Response::class);
         $this->app
-            ->when(UpdateOperators::class)
+            ->when(UpdateOperatorsCommand::class)
             ->needs(Response::class)
             ->give(fn () => $this->response);
     }
@@ -99,7 +99,6 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
-
         $operatorsInDatabase = [
             [
                 'customer_id' => 22,
@@ -132,11 +131,10 @@ class UpdateOperatorsTest extends TestCase
                 'deleted' => true,
             ]
         ];
-
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->httpClient::fake([
             'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
         ]);
-        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
 
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)

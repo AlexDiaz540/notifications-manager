@@ -57,7 +57,6 @@ class OperatorRepositoryTest extends TestCase
             'order_notifications_by_push' => false,
             'deleted' => true,
         ];
-
         $operator = new Operator($operatorData);
 
         $this->operatorRepository
@@ -71,46 +70,6 @@ class OperatorRepositoryTest extends TestCase
     #[Test]
     public function updateWhenMultipleOperatorsGiven(): void
     {
-        $operatorsData = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 22,
-                'id' => 4,
-                'name' => '674654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ],
-            [
-                'sequenceNumber' => 1510133,
-                'journalEntryType' => 'UP',
-                'customerId' => 23,
-                'id' => 3,
-                'name' => '654234',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
         $operatorsInDatabase = [
             [
                 'customer_id' => 22,
@@ -143,8 +102,6 @@ class OperatorRepositoryTest extends TestCase
                 'deleted' => true,
             ]
         ];
-        $operator1 = new Operator($operatorsData[0]);
-        $operator2 = new Operator($operatorsData[1]);
 
         $this->operatorRepository
             ->shouldReceive('save')

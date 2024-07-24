@@ -2,8 +2,8 @@
 
 namespace NotificationsManager\Operators\Tests\Unit;
 
-use NotificationsManager\Operators\IlluminateOperatorsRequestRepository;
-use NotificationsManager\Operators\Repositories\OperatorsRequestRepository;
+use NotificationsManager\Operators\Database\Entities\Operator;
+use NotificationsManager\Operators\OperatorsApiDataSource;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Http as HttpClient;
@@ -11,19 +11,20 @@ use Illuminate\Support\Facades\Http as HttpClient;
 class OperatorRequestRepositoryTest extends TestCase
 {
     private HttpClient $httpClient;
-    private OperatorsRequestRepository $operatorsRequestRepository;
+    private OperatorsApiDataSource $operatorsApiDataSource;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->operatorsRequestRepository = new IlluminateOperatorsRequestRepository();
+        $this->operatorsApiDataSource = new OperatorsApiDataSource();
         $this->httpClient = new HttpClient();
     }
 
     #[Test]
     public function getSingleOperator(): void
     {
-        $expectedResponse = [
+        $expectedResponse = [];
+        $operatorData = [
             [
                 'sequenceNumber' => 1510105,
                 'journalEntryType' => 'UP',
@@ -44,8 +45,9 @@ class OperatorRequestRepositoryTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
+        $expectedResponse[] = new Operator($operatorData[0]);
 
-        $operators = $this->operatorsRequestRepository->getOperators();
+        $operators = $this->operatorsApiDataSource->getOperators();
 
         $this->assertEquals($expectedResponse, $operators);
     }
@@ -53,7 +55,8 @@ class OperatorRequestRepositoryTest extends TestCase
     #[Test]
     public function getMultipleOperators(): void
     {
-        $expectedResponse = [
+        $expectedResponse = [];
+        $operatorsData = [
             [
                 'sequenceNumber' => 1510105,
                 'journalEntryType' => 'UP',
@@ -94,10 +97,12 @@ class OperatorRequestRepositoryTest extends TestCase
             ]
         ];
         $this->httpClient::fake([
-            'https://api.extexnal.com/operators/*' => $this->httpClient::response($expectedResponse, 200)
+            'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
         ]);
+        $expectedResponse[] = new Operator($operatorsData[0]);
+        $expectedResponse[] = new Operator($operatorsData[1]);
 
-        $operators = $this->operatorsRequestRepository->getOperators();
+        $operators = $this->operatorsApiDataSource->getOperators();
 
         $this->assertEquals($expectedResponse, $operators);
     }
@@ -110,7 +115,7 @@ class OperatorRequestRepositoryTest extends TestCase
             'https://api.extexnal.com/operators/*' => $this->httpClient::response([], 200)
         ]);
 
-        $operators = $this->operatorsRequestRepository->getOperators();
+        $operators = $this->operatorsApiDataSource->getOperators();
 
         $this->assertEquals($expectedResponse, $operators);
     }
@@ -124,6 +129,6 @@ class OperatorRequestRepositoryTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionCode(500);
 
-        $this->operatorsRequestRepository->getOperators();
+        $this->operatorsApiDataSource->getOperators();
     }
 }
