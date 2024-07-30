@@ -6,7 +6,7 @@ use Exception;
 use Mockery\Container;
 use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\OperatorsApiDataSource;
-use NotificationsManager\Operators\Repositories\OperatorRepository;
+use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 use NotificationsManager\Operators\UpdateOperatorsService;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -15,7 +15,7 @@ use Tests\TestCase;
 class UpdateOperatorsServiceTest extends TestCase
 {
     private OperatorsApiDataSource $operatorsApiDataSource;
-    private OperatorRepository $operatorRepository;
+    private OperatorRepositoryInterface $operatorRepository;
     private UpdateOperatorsService $updateOperatorsService;
 
     protected function setUp(): void
@@ -23,7 +23,7 @@ class UpdateOperatorsServiceTest extends TestCase
         parent::setUp();
         $mockeryContainer = new Container();
         $this->operatorsApiDataSource = $mockeryContainer->mock(OperatorsApiDataSource::class);
-        $this->operatorRepository = $mockeryContainer->mock(OperatorRepository::class);
+        $this->operatorRepository = $mockeryContainer->mock(OperatorRepositoryInterface::class);
         $this->updateOperatorsService  = new UpdateOperatorsService($this->operatorsApiDataSource, $this->operatorRepository);
     }
 
