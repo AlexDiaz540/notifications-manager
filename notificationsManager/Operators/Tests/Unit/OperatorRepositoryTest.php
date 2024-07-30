@@ -5,19 +5,19 @@ namespace NotificationsManager\Operators\Tests\Unit;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\Container;
 use NotificationsManager\Operators\Database\Entities\Operator;
-use NotificationsManager\Operators\Repositories\OperatorRepository;
+use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class OperatorRepositoryTest extends TestCase
 {
-    private OperatorRepository $operatorRepository;
+    private OperatorRepositoryInterface $operatorRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
         $mockeryContainer = new Container();
-        $this->operatorRepository = $mockeryContainer->mock(OperatorRepository::class);
+        $this->operatorRepository = $mockeryContainer->mock(OperatorRepositoryInterface::class);
     }
 
     #[Test]
