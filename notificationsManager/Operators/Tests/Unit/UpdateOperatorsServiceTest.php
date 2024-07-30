@@ -9,7 +9,7 @@ use NotificationsManager\Operators\OperatorsApiDataSource;
 use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 use NotificationsManager\Operators\UpdateOperatorsService;
 use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class UpdateOperatorsServiceTest extends TestCase
@@ -62,11 +62,11 @@ class UpdateOperatorsServiceTest extends TestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Failed to retrieve operators.');
-        $this->expectExceptionCode(ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+        $this->expectExceptionCode(Response::HTTP_INTERNAL_SERVER_ERROR);
 
         $this->operatorsApiDataSource
             ->expects('getOperators')
-            ->andThrow(new Exception('Failed to retrieve operators.', ResponseAlias::HTTP_INTERNAL_SERVER_ERROR));
+            ->andThrow(new Exception('Failed to retrieve operators.', Response::HTTP_INTERNAL_SERVER_ERROR));
 
         $this->updateOperatorsService->update();
     }

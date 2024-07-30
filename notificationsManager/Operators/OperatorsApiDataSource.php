@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http as HttpClient;
 use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\Repositories\ApiRepositoryInterface;
 use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Symfony\Component\HttpFoundation\Response;
 
 class OperatorsApiDataSource
 {
@@ -27,7 +27,7 @@ class OperatorsApiDataSource
             $jsonResponse = $this->apiRepository->fetchData(self::URL);
             $operatorsData = json_decode($jsonResponse, true);
         } catch (Exception) {
-            throw new Exception('Failed to retrieve operators.', ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            throw new Exception('Failed to retrieve operators.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         try {
             $operators = [];
@@ -36,7 +36,7 @@ class OperatorsApiDataSource
             }
             return $operators;
         } catch (Exception $e) {
-            throw new Exception('Failed to update operators.', 400);
+            throw new Exception('Failed to update operators.', Response::HTTP_BAD_REQUEST);
         }
     }
 }
