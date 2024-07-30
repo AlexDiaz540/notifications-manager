@@ -3,10 +3,8 @@
 namespace NotificationsManager\Operators;
 
 use Exception;
-use Illuminate\Support\Facades\Http as HttpClient;
 use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\Repositories\ApiRepositoryInterface;
-use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class OperatorsApiDataSource

@@ -2,7 +2,6 @@
 
 namespace NotificationsManager\Operators\Tests\Unit;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Mockery\Container;
 use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
