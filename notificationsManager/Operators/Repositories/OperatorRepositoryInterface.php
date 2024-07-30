@@ -4,7 +4,7 @@ namespace NotificationsManager\Operators\Repositories;
 
 use NotificationsManager\Operators\Database\Entities\Operator;
 
-interface OperatorRepository
+interface OperatorRepositoryInterface
 {
     public function save(Operator $operator): void;
 }

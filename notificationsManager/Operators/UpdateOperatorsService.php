@@ -3,13 +3,13 @@
 namespace NotificationsManager\Operators;
 
 use Exception;
-use NotificationsManager\Operators\Repositories\OperatorRepository;
+use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 
 readonly class UpdateOperatorsService
 {
     public function __construct(
         private OperatorsApiDataSource $operatorsApiDataSource,
-        private OperatorRepository $operatorRepository
+        private OperatorRepositoryInterface $operatorRepository
     ) {
     }
 
