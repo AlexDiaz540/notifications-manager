@@ -2,22 +2,25 @@
 
 namespace NotificationsManager\Operators\Tests\Unit;
 
+use Exception;
+use Mockery\Container;
 use NotificationsManager\Operators\Database\Entities\Operator;
 use NotificationsManager\Operators\OperatorsApiDataSource;
+use NotificationsManager\Operators\Repositories\ApiRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Http as HttpClient;
 
-class OperatorRequestRepositoryTest extends TestCase
+class OperatorApiDataSourceTest extends TestCase
 {
-    private HttpClient $httpClient;
     private OperatorsApiDataSource $operatorsApiDataSource;
+    private ApiRepositoryInterface $apiRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->operatorsApiDataSource = new OperatorsApiDataSource();
-        $this->httpClient = new HttpClient();
+        $mockeryContainer = new Container();
+        $this->apiRepository = $mockeryContainer->mock(ApiRepositoryInterface::class);
+        $this->operatorsApiDataSource = new OperatorsApiDataSource($this->apiRepository);
     }
 
     #[Test]
@@ -45,6 +48,11 @@ class OperatorRequestRepositoryTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
+        $this->apiRepository
+            ->expects('fetchData')
+            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
+            ->once()
+            ->andReturn(json_encode($operatorData));
         $expectedResponse[] = new Operator($operatorData[0]);
 
         $operators = $this->operatorsApiDataSource->getOperators();
@@ -96,9 +104,11 @@ class OperatorRequestRepositoryTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
-        $this->httpClient::fake([
-            'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
-        ]);
+        $this->apiRepository
+            ->expects('fetchData')
+            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
+            ->once()
+            ->andReturn(json_encode($operatorsData));
         $expectedResponse[] = new Operator($operatorsData[0]);
         $expectedResponse[] = new Operator($operatorsData[1]);
 
@@ -111,9 +121,11 @@ class OperatorRequestRepositoryTest extends TestCase
     public function getOperatorsWithNoOperatorsReceived(): void
     {
         $expectedResponse = [];
-        $this->httpClient::fake([
-            'https://api.extexnal.com/operators/*' => $this->httpClient::response([], 200)
-        ]);
+        $this->apiRepository
+            ->expects('fetchData')
+            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
+            ->once()
+            ->andReturn(json_encode([]));
 
         $operators = $this->operatorsApiDataSource->getOperators();
 
@@ -123,11 +135,14 @@ class OperatorRequestRepositoryTest extends TestCase
     #[Test]
     public function apiRequestFails(): void
     {
-        $this->httpClient::fake([
-            'https://api.extexnal.com/operators/*' => $this->httpClient::response([], 500)
-        ]);
-        $this->expectException(\Exception::class);
+        $this->apiRepository
+            ->expects('fetchData')
+            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
+            ->once()
+            ->andThrow(new Exception());
+        $this->expectException(Exception::class);
         $this->expectExceptionCode(500);
+        $this->expectExceptionMessage('Failed to retrieve operators.');
 
         $this->operatorsApiDataSource->getOperators();
     }
