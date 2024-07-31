@@ -60,7 +60,6 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ],
         ];
-        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->apiRepository
             ->expects('fetchData')
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
@@ -70,6 +69,7 @@ class UpdateOperatorsTest extends TestCase
             ->expects('save')
             ->once();
 
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(0);
@@ -118,7 +118,6 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
-        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->apiRepository
             ->expects('fetchData')
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
@@ -128,6 +127,7 @@ class UpdateOperatorsTest extends TestCase
             ->expects('save')
             ->twice();
 
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(0);
@@ -142,11 +142,11 @@ class UpdateOperatorsTest extends TestCase
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
             ->once()
             ->andReturn(json_encode($operatorsData));
-        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->operatorRepository
             ->expects('save')
             ->once();
 
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(0);
@@ -160,8 +160,8 @@ class UpdateOperatorsTest extends TestCase
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
             ->once()
             ->andThrow(new Exception());
-        $expectedResponse = json_encode(['message' => "Failed to retrieve operators."], JSON_THROW_ON_ERROR);
 
+        $expectedResponse = json_encode(['message' => "Failed to retrieve operators."], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(1);
@@ -200,8 +200,8 @@ class UpdateOperatorsTest extends TestCase
             $mock->shouldReceive('persist')->andThrow(new Exception('Database error'));
             $mock->shouldReceive('flush')->andThrow(new Exception('Database error'));
         });
-        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
 
+        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(1);
@@ -228,8 +228,8 @@ class UpdateOperatorsTest extends TestCase
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
             ->once()
             ->andReturn(json_encode($operatorsData));
-        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
 
+        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(1);
@@ -259,7 +259,6 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ],
         ];
-        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
         $this->apiRepository
             ->expects('fetchData')
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
@@ -270,6 +269,7 @@ class UpdateOperatorsTest extends TestCase
             ->once()
             ->andThrow(new Exception('Database error'));
 
+        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(1);
