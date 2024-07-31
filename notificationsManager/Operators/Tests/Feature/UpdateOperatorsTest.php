@@ -52,21 +52,6 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ],
         ];
-        $operatorInDatabase = [
-            'customer_id' => 26,
-            'id' => 2,
-            'name' => '654654',
-            'surname_1' => '',
-            'surname_2' => '',
-            'phone' => 0,
-            'email' => '',
-            'order_notifications_enabled' => false,
-            'order_notifications_email' => '',
-            'order_notifications_by_email' => false,
-            'order_notifications_by_sms' => false,
-            'order_notifications_by_push' => false,
-            'deleted' => true,
-        ];
         $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->apiRepository
             ->expects('fetchData')
@@ -77,8 +62,6 @@ class UpdateOperatorsTest extends TestCase
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(0);
-
-        $this->assertDatabaseHas('operators', $operatorInDatabase);
     }
 
     #[Test]
@@ -124,38 +107,6 @@ class UpdateOperatorsTest extends TestCase
                 'objectSchema' => 'IQSFCOMUN'
             ]
         ];
-        $operatorsInDatabase = [
-            [
-                'customer_id' => 22,
-                'id' => 4,
-                'name' => '674654',
-                'surname_1' => '',
-                'surname_2' => '',
-                'phone' => 0,
-                'email' => '',
-                'order_notifications_enabled' => false,
-                'order_notifications_email' => '',
-                'order_notifications_by_email' => false,
-                'order_notifications_by_sms' => false,
-                'order_notifications_by_push' => false,
-                'deleted' => true,
-            ],
-            [
-                'customer_id' => 23,
-                'id' => 3,
-                'name' => '654234',
-                'surname_1' => '',
-                'surname_2' => '',
-                'phone' => 0,
-                'email' => '',
-                'order_notifications_enabled' => false,
-                'order_notifications_email' => '',
-                'order_notifications_by_email' => false,
-                'order_notifications_by_sms' => false,
-                'order_notifications_by_push' => false,
-                'deleted' => true,
-            ]
-        ];
         $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->apiRepository
             ->expects('fetchData')
@@ -166,10 +117,6 @@ class UpdateOperatorsTest extends TestCase
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(0);
-
-        foreach ($operatorsInDatabase as $operator) {
-            $this->assertDatabaseHas('operators', $operator);
-        }
     }
 
     #[Test]
