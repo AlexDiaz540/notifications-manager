@@ -2,25 +2,29 @@
 
 namespace NotificationsManager\Operators\Tests\Unit;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\Container;
 use NotificationsManager\Operators\Database\Entities\Operator;
+use NotificationsManager\Operators\DoctrineOperatorRepository;
 use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class OperatorRepositoryTest extends TestCase
 {
+    use RefreshDatabase;
+
     private OperatorRepositoryInterface $operatorRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
         $mockeryContainer = new Container();
-        $this->operatorRepository = $mockeryContainer->mock(OperatorRepositoryInterface::class);
+        $this->operatorRepository = $this->app->make(DoctrineOperatorRepository::class);
     }
 
     #[Test]
-    public function updateWhenOneOperatorGiven(): void
+    public function updateOperatorInDatabase(): void
     {
         $operatorData = [
                 'sequenceNumber' => 1510105,
@@ -58,56 +62,8 @@ class OperatorRepositoryTest extends TestCase
         ];
         $operator = new Operator($operatorData);
 
-        $this->operatorRepository
-            ->shouldReceive('save')
-            ->with($operator)
-            ->once();
+        $this->operatorRepository->save($operator);
 
         $this->assertDatabaseHas('operators', $operatorInDataBase);
-    }
-
-    #[Test]
-    public function updateWhenMultipleOperatorsGiven(): void
-    {
-        $operatorsInDatabase = [
-            [
-                'customer_id' => 22,
-                'id' => 4,
-                'name' => '674654',
-                'surname_1' => '',
-                'surname_2' => '',
-                'phone' => 0,
-                'email' => '',
-                'order_notifications_enabled' => false,
-                'order_notifications_email' => '',
-                'order_notifications_by_email' => false,
-                'order_notifications_by_sms' => false,
-                'order_notifications_by_push' => false,
-                'deleted' => true,
-            ],
-            [
-                'customer_id' => 23,
-                'id' => 3,
-                'name' => '654234',
-                'surname_1' => '',
-                'surname_2' => '',
-                'phone' => 0,
-                'email' => '',
-                'order_notifications_enabled' => false,
-                'order_notifications_email' => '',
-                'order_notifications_by_email' => false,
-                'order_notifications_by_sms' => false,
-                'order_notifications_by_push' => false,
-                'deleted' => true,
-            ]
-        ];
-
-        $this->operatorRepository
-            ->shouldReceive('save')
-            ->twice();
-
-        foreach ($operatorsInDatabase as $operator) {
-            $this->assertDatabaseHas('operators', $operator);
-        }
     }
 }
