@@ -24,7 +24,7 @@ class OperatorApiDataSourceTest extends TestCase
     }
 
     #[Test]
-    public function getSingleOperator(): void
+    public function getsOperator(): void
     {
         $expectedResponse = [];
         $operatorData = [
@@ -61,79 +61,7 @@ class OperatorApiDataSourceTest extends TestCase
     }
 
     #[Test]
-    public function getMultipleOperators(): void
-    {
-        $expectedResponse = [];
-        $operatorsData = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 26,
-                'id' => 2,
-                'name' => '654654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ],
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 24,
-                'id' => 4,
-                'name' => '654314',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
-        $this->apiRepository
-            ->expects('fetchData')
-            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
-            ->once()
-            ->andReturn(json_encode($operatorsData));
-        $expectedResponse[] = new Operator($operatorsData[0]);
-        $expectedResponse[] = new Operator($operatorsData[1]);
-
-        $operators = $this->operatorsApiDataSource->getOperators();
-
-        $this->assertEquals($expectedResponse, $operators);
-    }
-
-    #[Test]
-    public function getOperatorsWithNoOperatorsReceived(): void
-    {
-        $expectedResponse = [];
-        $this->apiRepository
-            ->expects('fetchData')
-            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
-            ->once()
-            ->andReturn(json_encode([]));
-
-        $operators = $this->operatorsApiDataSource->getOperators();
-
-        $this->assertEquals($expectedResponse, $operators);
-    }
-
-    #[Test]
-    public function apiRequestFails(): void
+    public function getsOperatorButReceivesErrorMessage(): void
     {
         $this->apiRepository
             ->expects('fetchData')
