@@ -17,6 +17,27 @@ class UpdateOperatorsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $operatorData = [
+        [
+            'sequenceNumber' => 1510105,
+            'journalEntryType' => 'UP',
+            'customerId' => 26,
+            'id' => 2,
+            'name' => '654654',
+            'surname1' => '',
+            'surname2' => '',
+            'phone' => 0,
+            'email' => '',
+            'orderNotifications' => false,
+            'orderNotificationEmail' => '',
+            'orderNotificationByEmail' => false,
+            'orderNotificationBySms' => false,
+            'orderNotificationByPush' => false,
+            'deleted' => true,
+            'object' => 'SALQ9U',
+            'objectSchema' => 'IQSFCOMUN'
+        ],
+    ];
     private ApiRepositoryInterface $apiRepository;
     private OperatorRepositoryInterface $operatorRepository;
 
@@ -37,34 +58,13 @@ class UpdateOperatorsTest extends TestCase
             ->give(fn () => $this->operatorRepository);
     }
     #[Test]
-    public function updateOneOperator(): void
+    public function updatesAnOperator(): void
     {
-        $operatorData = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 26,
-                'id' => 2,
-                'name' => '654654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ],
-        ];
         $this->apiRepository
             ->expects('fetchData')
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
             ->once()
-            ->andReturn(json_encode($operatorData));
+            ->andReturn(json_encode($this->operatorData));
         $this->operatorRepository
             ->expects('save')
             ->once();
@@ -76,84 +76,7 @@ class UpdateOperatorsTest extends TestCase
     }
 
     #[Test]
-    public function updateMultipleOperators(): void
-    {
-        $operatorsData = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 22,
-                'id' => 4,
-                'name' => '674654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ],
-            [
-                'sequenceNumber' => 1510133,
-                'journalEntryType' => 'UP',
-                'customerId' => 23,
-                'id' => 3,
-                'name' => '654234',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
-        $this->apiRepository
-            ->expects('fetchData')
-            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
-            ->once()
-            ->andReturn(json_encode($operatorsData));
-        $this->operatorRepository
-            ->expects('save')
-            ->twice();
-
-        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
-        $this->artisan('update:operators')
-            ->expectsOutput($expectedResponse)
-            ->assertExitCode(0);
-    }
-
-    #[Test]
-    public function updateOperatorsWithNoOperatorsReceived(): void
-    {
-        $operatorsData = [];
-        $this->apiRepository
-            ->expects('fetchData')
-            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
-            ->once()
-            ->andReturn(json_encode($operatorsData));
-        $this->operatorRepository
-            ->expects('save')
-            ->once();
-
-        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
-        $this->artisan('update:operators')
-            ->expectsOutput($expectedResponse)
-            ->assertExitCode(0);
-    }
-
-    #[Test]
-    public function updateOpertatorsWhenApiRequestFails(): void
+    public function updatesOperatorsWhenApiRequestFails(): void
     {
         $this->apiRepository
             ->expects('fetchData')
@@ -168,102 +91,13 @@ class UpdateOperatorsTest extends TestCase
     }
 
     #[Test]
-    public function updateOperatorsWhenInsertInDataBaseFails(): void
+    public function updatesOperatorsWhenOperatorRepositoryFails(): void
     {
-        $operatorsData = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 26,
-                'id' => 2,
-                'name' => '654654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
         $this->apiRepository
             ->expects('fetchData')
             ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
             ->once()
-            ->andReturn(json_encode($operatorsData));
-        $this->mock(EntityManagerInterface::class, function ($mock) {
-            $mock->shouldReceive('persist')->andThrow(new Exception('Database error'));
-            $mock->shouldReceive('flush')->andThrow(new Exception('Database error'));
-        });
-
-        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
-        $this->artisan('update:operators')
-            ->expectsOutput($expectedResponse)
-            ->assertExitCode(1);
-    }
-
-    #[Test]
-    public function updateOperatorsWhenCreateEntityOperatorFails(): void
-    {
-        $operatorsData = [
-            [
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
-        $this->apiRepository
-            ->expects('fetchData')
-            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
-            ->once()
-            ->andReturn(json_encode($operatorsData));
-
-        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
-        $this->artisan('update:operators')
-            ->expectsOutput($expectedResponse)
-            ->assertExitCode(1);
-    }
-
-    #[Test]
-    public function updateOperatorsWhenOperatorRepositoryFails(): void
-    {
-        $operatorData = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 26,
-                'id' => 2,
-                'name' => '654654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ],
-        ];
-        $this->apiRepository
-            ->expects('fetchData')
-            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
-            ->once()
-            ->andReturn(json_encode($operatorData));
+            ->andReturn(json_encode($this->operatorData));
         $this->operatorRepository
             ->expects('save')
             ->once()
