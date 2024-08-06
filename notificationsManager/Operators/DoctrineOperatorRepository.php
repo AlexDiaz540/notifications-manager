@@ -14,9 +14,9 @@ class DoctrineOperatorRepository implements OperatorRepositoryInterface
     private Client $client;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(Client $client, EntityManagerInterface $entityManager)
     {
-        $this->client = new Client();
+        $this->client = $client;
         $this->entityManager = $entityManager;
     }
 
@@ -26,7 +26,7 @@ class DoctrineOperatorRepository implements OperatorRepositoryInterface
             $url = 'http://api.extexnal.com/operators/?sequence_number=12341234';
             $response = $this->client->get($url);
             $operatorsData = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             throw new Exception('Failed to retrieve operators.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

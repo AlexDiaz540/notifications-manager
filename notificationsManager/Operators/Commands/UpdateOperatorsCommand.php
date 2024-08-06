@@ -4,7 +4,7 @@ namespace NotificationsManager\Operators\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use NotificationsManager\Operators\UpdateOperatorsService;
+use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateOperatorsCommand extends Command
@@ -12,7 +12,7 @@ class UpdateOperatorsCommand extends Command
     protected $signature = 'update:operators';
     protected $description = 'Actualiza los datos de los operarios';
 
-    public function __construct(private readonly UpdateOperatorsService $updateOperatorsService)
+    public function __construct(private readonly OperatorRepositoryInterface $operatorRepository)
     {
         parent::__construct();
     }
@@ -20,7 +20,7 @@ class UpdateOperatorsCommand extends Command
     public function handle(): int
     {
         try {
-            $this->updateOperatorsService->update();
+            $this->operatorRepository->update();
             $this->info(json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
             return 0;
         } catch (Exception $exception) {
