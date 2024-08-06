@@ -3,26 +3,28 @@
 namespace NotificationsManager\Operators;
 
 use Exception;
-use NotificationsManager\Operators\Database\Entities\Operator;
-use NotificationsManager\Operators\Repositories\OperatorRepository;
+use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 
-class UpdateOperatorsService
+readonly class UpdateOperatorsService
 {
-    public function __construct(private readonly OperatorRepository $operatorRepository)
-    {
+    public function __construct(
+        private OperatorsApiDataSource $operatorsApiDataSource,
+        private OperatorRepositoryInterface $operatorRepository
+    ) {
     }
 
     /**
-     * @param array<int> $operatorData
      * @throws Exception
      */
-    public function update(array $operatorData): void
+    public function update(): void
     {
+        $operators = $this->operatorsApiDataSource->getOperators();
         try {
-            $operator = new Operator($operatorData);
-            $this->operatorRepository->save($operator);
-        } catch (Exception $e) {
-            throw new Exception('Failed to update operator data.', 400);
+            foreach ($operators as $operator) {
+                $this->operatorRepository->save($operator);
+            }
+        } catch (Exception) {
+            throw new Exception('Failed to update operators.', 400);
         }
     }
 }

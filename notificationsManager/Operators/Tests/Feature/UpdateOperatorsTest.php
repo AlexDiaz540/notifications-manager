@@ -4,10 +4,11 @@ namespace NotificationsManager\Operators\Tests\Feature;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http as HttpClient;
 use Mockery\Container;
-use NotificationsManager\Operators\Commands\UpdateOperators;
+use NotificationsManager\Operators\OperatorsApiDataSource;
+use NotificationsManager\Operators\Repositories\ApiRepositoryInterface;
+use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
+use NotificationsManager\Operators\UpdateOperatorsService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,115 +17,93 @@ class UpdateOperatorsTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Response $response;
-    private HttpClient $httpClient;
+    private $operatorData = [
+        [
+            'sequenceNumber' => 1510105,
+            'journalEntryType' => 'UP',
+            'customerId' => 26,
+            'id' => 2,
+            'name' => '654654',
+            'surname1' => '',
+            'surname2' => '',
+            'phone' => 0,
+            'email' => '',
+            'orderNotifications' => false,
+            'orderNotificationEmail' => '',
+            'orderNotificationByEmail' => false,
+            'orderNotificationBySms' => false,
+            'orderNotificationByPush' => false,
+            'deleted' => true,
+            'object' => 'SALQ9U',
+            'objectSchema' => 'IQSFCOMUN'
+        ],
+    ];
+    private ApiRepositoryInterface $apiRepository;
+    private OperatorRepositoryInterface $operatorRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
         $mockeryContainer = new Container();
-        $this->httpClient = new HttpClient();
-        $this->response = $mockeryContainer->mock(Response::class);
+        $this->apiRepository = $mockeryContainer->mock(ApiRepositoryInterface::class);
+        $this->operatorRepository = $mockeryContainer->mock(OperatorRepositoryInterface::class);
+
         $this->app
-            ->when(UpdateOperators::class)
-            ->needs(Response::class)
-            ->give(fn () => $this->response);
+            ->when(OperatorsApiDataSource::class)
+            ->needs(ApiRepositoryInterface::class)
+            ->give(fn () => $this->apiRepository);
+        $this->app
+            ->when(UpdateOperatorsService::class)
+            ->needs(OperatorRepositoryInterface::class)
+            ->give(fn () => $this->operatorRepository);
     }
     #[Test]
-    public function testUpdateOperatorsSuccessful(): void
+    public function updatesAnOperator(): void
     {
-        $operatorData = [
-            'customer_id' => 26,
-            'id' => 2,
-            'name' => '654654',
-            'surname_1' => '',
-            'surname_2' => '',
-            'phone' => 0,
-            'email' => '',
-            'order_notifications_enabled' => false,
-            'order_notifications_email' => '',
-            'order_notifications_by_email' => false,
-            'order_notifications_by_sms' => false,
-            'order_notifications_by_push' => false,
-            'deleted' => true,
-        ];
-        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
+        $this->apiRepository
+            ->expects('fetchData')
+            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
+            ->once()
+            ->andReturn(json_encode($this->operatorData));
+        $this->operatorRepository
+            ->expects('save')
+            ->once();
 
+        $expectedResponse = json_encode(['message' => 'Operators updated successfully.'], JSON_THROW_ON_ERROR);
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(0);
-        $this->assertDatabaseHas('operators', $operatorData);
     }
 
-    public function testWhenApiFails(): void
+    #[Test]
+    public function updatesOperatorsWhenApiRequestFails(): void
     {
-        $this->httpClient::fake([
-            'https://api.extexnal.com/operators/*' => $this->httpClient::response([], 500)
-        ]);
+        $this->apiRepository
+            ->expects('fetchData')
+            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
+            ->once()
+            ->andThrow(new Exception());
+
         $expectedResponse = json_encode(['message' => "Failed to retrieve operators."], JSON_THROW_ON_ERROR);
-
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(1);
     }
 
-    public function testWhenInsertingInDataBaseFails(): void
+    #[Test]
+    public function updatesOperatorsWhenOperatorRepositoryFails(): void
     {
-        $operatorsData = [
-            [
-                'sequenceNumber' => 1510105,
-                'journalEntryType' => 'UP',
-                'customerId' => 26,
-                'id' => 2,
-                'name' => '654654',
-                'surname1' => '',
-                'surname2' => '',
-                'phone' => 0,
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
-        $this->httpClient::fake([
-            'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
-        ]);
-        $this->mock(EntityManagerInterface::class, function ($mock) {
-            $mock->shouldReceive('persist')->andThrow(new Exception('Database error'));
-            $mock->shouldReceive('flush')->andThrow(new Exception('Database error'));
-        });
+        $this->apiRepository
+            ->expects('fetchData')
+            ->with('http://api.extexnal.com/operators/?sequence_number=12341234')
+            ->once()
+            ->andReturn(json_encode($this->operatorData));
+        $this->operatorRepository
+            ->expects('save')
+            ->once()
+            ->andThrow(new Exception('Database error'));
+
         $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
-
-        $this->artisan('update:operators')
-            ->expectsOutput($expectedResponse)
-            ->assertExitCode(1);
-    }
-
-    public function testWhenSettingEntityOperator(): void
-    {
-        $operatorsData = [
-            [
-                'email' => '',
-                'orderNotifications' => false,
-                'orderNotificationEmail' => '',
-                'orderNotificationByEmail' => false,
-                'orderNotificationBySms' => false,
-                'orderNotificationByPush' => false,
-                'deleted' => true,
-                'object' => 'SALQ9U',
-                'objectSchema' => 'IQSFCOMUN'
-            ]
-        ];
-        $this->httpClient::fake([
-            'https://api.extexnal.com/operators/*' => $this->httpClient::response($operatorsData, 200)
-        ]);
-        $expectedResponse = json_encode(['message' => "Failed to update operators."], JSON_THROW_ON_ERROR);
-
         $this->artisan('update:operators')
             ->expectsOutput($expectedResponse)
             ->assertExitCode(1);
