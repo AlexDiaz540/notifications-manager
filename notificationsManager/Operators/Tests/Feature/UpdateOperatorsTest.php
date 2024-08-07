@@ -2,7 +2,6 @@
 
 namespace NotificationsManager\Operators\Tests\Feature;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Mockery\Container;
 use NotificationsManager\Operators\Commands\UpdateOperatorsCommand;
