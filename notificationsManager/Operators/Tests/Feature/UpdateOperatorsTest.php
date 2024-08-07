@@ -9,7 +9,6 @@ use GuzzleHttp\Psr7\Response;
 use Mockery\Container;
 use NotificationsManager\ApiOperatorsDataSource;
 use NotificationsManager\DatabaseOperatorsDataSource;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;

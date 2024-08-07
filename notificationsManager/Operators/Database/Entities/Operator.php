@@ -19,34 +19,34 @@ class Operator
     protected int $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer, nullable=true")
      */
-    protected int $customerId;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    protected string $name;
+    protected ?int $customerId;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    protected string $surname_1;
+    protected ?string $name;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    protected string $surname_2;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected int $phone;
+    protected ?string $surname_1;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    protected string $email;
+    protected ?string $surname_2;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $phone;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    protected ?string $email;
 
     /**
      * @ORM\Column(type="boolean")
@@ -88,26 +88,41 @@ class Operator
      */
     protected datetime $updatedAt;
 
+    public function __construct(
+        int $id,
+        int $customerId = null,
+        string $name = null,
+        string $surname_1 = null,
+        string $surname_2 = null,
+        int $phone = null,
+        string $email = null,
+        bool $orderNotificationsEnabled = false,
+        string $orderNotificationsEmail = '',
+        bool $orderNotificationsByEmail = false,
+        bool $orderNotificationsBySms = false,
+        bool $orderNotificationsByPush = false,
+        bool $deleted = false,
+    ) {
+        $this->id = $id;
+        $this->customerId = $customerId;
+        $this->name = $name;
+        $this->surname_1 = $surname_1;
+        $this->surname_2 = $surname_2;
+        $this->phone = $phone;
+        $this->email = $email;
+        $this->orderNotificationsEnabled = $orderNotificationsEnabled;
+        $this->orderNotificationsEmail = $orderNotificationsEmail;
+        $this->orderNotificationsByEmail = $orderNotificationsByEmail;
+        $this->orderNotificationsBySms = $orderNotificationsBySms;
+        $this->orderNotificationsByPush = $orderNotificationsByPush;
+        $this->deleted = $deleted;
+    }
+
     /**
      * @param array<int> $data
      * @return void
      */
-    public function __construct(array $data)
-    {
-        $this->setId($data['id']);
-        $this->setCustomerId($data['customerId'] ?? null);
-        $this->setName($data['name'] ?? null);
-        $this->setSurname1($data['surname1'] ?? null);
-        $this->setSurname2($data['surname2'] ?? null);
-        $this->setPhone($data['phone'] ?? null);
-        $this->setEmail($data['email'] ?? null);
-        $this->setOrderNotificationsEnabled($data['orderNotificationsEnabled'] ?? false);
-        $this->setOrderNotificationsEmail($data['orderNotificationsEmail'] ?? '');
-        $this->setOrderNotificationsByEmail($data['orderNotificationsByEmail'] ?? false);
-        $this->setOrderNotificationsBySms($data['orderNotificationsBySms'] ?? false);
-        $this->setOrderNotificationsByPush($data['orderNotificationsByPush'] ?? false);
-        $this->setDeleted($data['deleted'] ?? false);
-    }
+
 
     /**
      * @param mixed $id
@@ -227,5 +242,28 @@ class Operator
     public function setUpdatedAt($updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @param array<int,mixed> $data
+     * @return self
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            $data['id'] ?? 0,
+            $data['customerId'] ?? null,
+            $data['name'] ?? null,
+            $data['surname1'] ?? null,
+            $data['surname2'] ?? null,
+            $data['phone'] ?? null,
+            $data['email'] ?? null,
+            $data['orderNotificationsEnabled'] ?? false,
+            $data['orderNotificationsEmail'] ?? '',
+            $data['orderNotificationsByEmail'] ?? false,
+            $data['orderNotificationsBySms'] ?? false,
+            $data['orderNotificationsByPush'] ?? false,
+            $data['deleted'] ?? false,
+        );
     }
 }

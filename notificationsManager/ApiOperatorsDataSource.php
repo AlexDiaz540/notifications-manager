@@ -31,7 +31,7 @@ class ApiOperatorsDataSource
 
             $operators = [];
             foreach ($operatorsData as $operatorData) {
-                $operators[] = new Operator($operatorData);
+                $operators[] = Operator::fromArray($operatorData);
             }
             return $operators;
         } catch (Exception) {
