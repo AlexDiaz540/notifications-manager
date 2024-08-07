@@ -2,21 +2,24 @@
 
 namespace NotificationsManager\Operators;
 
-use Doctrine\ORM\EntityManagerInterface;
-use NotificationsManager\Operators\Database\Entities\Operator;
+use NotificationsManager\ApiOperatorsDataSource;
+use NotificationsManager\DatabaseOperatorsDataSource;
 use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
 
 class DoctrineOperatorRepository implements OperatorRepositoryInterface
 {
-    private EntityManagerInterface $entityManager;
+    private ApiOperatorsDataSource $apiOperatorsDataSource;
+    private DatabaseOperatorsDataSource $databaseOperatorsDataSource;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ApiOperatorsDataSource $apiOperatorsDataSource, DatabaseOperatorsDataSource $databaseOperatorsDataSource)
     {
-        $this->entityManager = $entityManager;
+        $this->apiOperatorsDataSource  = $apiOperatorsDataSource;
+        $this->databaseOperatorsDataSource  = $databaseOperatorsDataSource;
     }
-    public function save(Operator $operator): void
+
+    public function update(): void
     {
-        $this->entityManager->persist($operator);
-        $this->entityManager->flush();
+        $operators = $this->apiOperatorsDataSource->getOperators();
+        $this->databaseOperatorsDataSource->save($operators);
     }
 }
