@@ -9,13 +9,11 @@ use GuzzleHttp\Psr7\Response;
 use Mockery\Container;
 use NotificationsManager\ApiOperatorsDataSource;
 use NotificationsManager\DatabaseOperatorsDataSource;
-use NotificationsManager\Operators\Database\Entities\Operator;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-#[Group("Integration")]
 class UpdateOperatorsTest extends TestCase
 {
     use RefreshDatabase;
