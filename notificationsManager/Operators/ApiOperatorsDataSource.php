@@ -1,6 +1,6 @@
 <?php
 
-namespace NotificationsManager;
+namespace NotificationsManager\Operators;
 
 use Exception;
 use GuzzleHttp\Client;
