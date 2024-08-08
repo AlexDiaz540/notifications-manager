@@ -2,7 +2,7 @@
 
 namespace NotificationsManager\Operators\Repositories;
 
-interface OperatorRepositoryInterface
+interface OperatorRepository
 {
     public function update(): void;
 }

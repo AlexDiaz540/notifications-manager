@@ -4,7 +4,7 @@ namespace NotificationsManager\Operators\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
+use NotificationsManager\Operators\Repositories\OperatorRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateOperatorsCommand extends Command
@@ -12,7 +12,7 @@ class UpdateOperatorsCommand extends Command
     protected $signature = 'update:operators';
     protected $description = 'Actualiza los datos de los operarios';
 
-    public function __construct(private readonly OperatorRepositoryInterface $operatorRepository)
+    public function __construct(private readonly OperatorRepository $operatorRepository)
     {
         parent::__construct();
     }

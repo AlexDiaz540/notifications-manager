@@ -1,6 +1,6 @@
 <?php
 
-namespace NotificationsManager;
+namespace NotificationsManager\Operators;
 
 use Exception;
 use GuzzleHttp\Client;
@@ -31,7 +31,7 @@ class ApiOperatorsDataSource
 
             $operators = [];
             foreach ($operatorsData as $operatorData) {
-                $operators[] = new Operator($operatorData);
+                $operators[] = Operator::fromArray($operatorData);
             }
             return $operators;
         } catch (Exception) {

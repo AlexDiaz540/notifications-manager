@@ -1,6 +1,6 @@
 <?php
 
-namespace NotificationsManager;
+namespace NotificationsManager\Operators;
 
 use Doctrine\ORM\EntityManager;
 use Exception;

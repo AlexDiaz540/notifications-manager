@@ -2,11 +2,9 @@
 
 namespace NotificationsManager\Operators;
 
-use NotificationsManager\ApiOperatorsDataSource;
-use NotificationsManager\DatabaseOperatorsDataSource;
-use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
+use NotificationsManager\Operators\Repositories\OperatorRepository;
 
-class DoctrineOperatorRepository implements OperatorRepositoryInterface
+class ApiAndDoctrineOperatorRepository implements OperatorRepository
 {
     private ApiOperatorsDataSource $apiOperatorsDataSource;
     private DatabaseOperatorsDataSource $databaseOperatorsDataSource;
