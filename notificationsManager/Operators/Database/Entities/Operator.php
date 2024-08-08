@@ -19,7 +19,7 @@ class Operator
     protected int $id;
 
     /**
-     * @ORM\Column(type="integer, nullable=true")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected ?int $customerId;
 
@@ -117,12 +117,6 @@ class Operator
         $this->orderNotificationsByPush = $orderNotificationsByPush;
         $this->deleted = $deleted;
     }
-
-    /**
-     * @param array<int> $data
-     * @return void
-     */
-
 
     /**
      * @param mixed $id
