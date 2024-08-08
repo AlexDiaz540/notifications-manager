@@ -4,7 +4,7 @@ namespace NotificationsManager\Operators\Tests;
 
 use NotificationsManager\Operators\Database\Entities\Operator;
 
-class OperatorBuilder
+class OperatorTestDataBuilder
 {
     protected int $id;
     protected int $customerId;
@@ -45,17 +45,16 @@ class OperatorBuilder
         $this->phone = 13556764;
         $this->email = 'someEmail@gmail.com';
         $this->orderNotificationsEnabled = false;
-        $this->orderNotificationsEmail = 'someEmail@gmail.com';
-        $this->orderNotificationsByEmail = true;
+        $this->orderNotificationsEmail = '';
+        $this->orderNotificationsByEmail = false;
         $this->orderNotificationsBySms = false;
         $this->orderNotificationsByPush = false;
-        $this->deleted = false;
+        $this->deleted = true;
     }
 
-    public function withId(int $id)
+    public function withId(int $id): self
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -71,10 +70,10 @@ class OperatorBuilder
             $this->email,
             $this->orderNotificationsEnabled,
             $this->orderNotificationsEmail,
-            $this->orderNotificationsEmail,
             $this->orderNotificationsByEmail,
             $this->orderNotificationsBySms,
-            $this->orderNotificationsByPush
+            $this->orderNotificationsByPush,
+            $this->deleted
         );
     }
 
@@ -103,7 +102,7 @@ class OperatorBuilder
 
     public function toApiResponse(): string
     {
-        return json_encode([$this->toArray()], JSON_PRETTY_PRINT);
+        return json_encode([$this->toArray()], JSON_THROW_ON_ERROR);
     }
 
     public function toDatabaseArray(): array
@@ -119,8 +118,8 @@ class OperatorBuilder
             'order_notifications_enabled' => $this->orderNotificationsEnabled,
             'order_notifications_email' => $this->orderNotificationsEmail,
             'order_notifications_by_email' => $this->orderNotificationsByEmail,
-            'order_notifications_by_sms' => $this->orderNotificationsBySms,
-            'order_notifications_by_push' => $this->orderNotificationsByPush,
+            'order_notifications_by_sms' =>  $this->orderNotificationsBySms,
+            'order_notifications_by_push' =>  $this->orderNotificationsByPush,
             'deleted' => $this->deleted,
         ];
     }
