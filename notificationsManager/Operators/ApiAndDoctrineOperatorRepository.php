@@ -2,9 +2,9 @@
 
 namespace NotificationsManager\Operators;
 
-use NotificationsManager\Operators\Repositories\OperatorRepositoryInterface;
+use NotificationsManager\Operators\Repositories\OperatorRepository;
 
-class ApiAndDoctrineOperatorRepository implements OperatorRepositoryInterface
+class ApiAndDoctrineOperatorRepository implements OperatorRepository
 {
     private ApiOperatorsDataSource $apiOperatorsDataSource;
     private DatabaseOperatorsDataSource $databaseOperatorsDataSource;
