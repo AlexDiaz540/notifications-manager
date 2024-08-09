@@ -43,7 +43,7 @@ class ApiOperatorsDataSourceTest extends TestCase
     }
 
     #[Test]
-    public function failsToRetrieveOperators(): void
+    public function failsToGetOperators(): void
     {
         $this->client
             ->expects('get')

@@ -54,7 +54,6 @@ class UpdateOperatorsCommandTest extends TestCase
             ->expectsOutput($expectedResponse)
             ->assertExitCode(0);
 
-
         $this->assertDatabaseHas('operators', $operatorInDataBase);
     }
 
