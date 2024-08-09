@@ -58,6 +58,14 @@ class OperatorTestDataBuilder
         return $this;
     }
 
+    public function buildInvalidOperator(): Operator
+    {
+        return new Operator(
+            $this->id,
+            $this->customerId,
+        );
+    }
+
     public function build()
     {
         return new Operator(
