@@ -31,4 +31,17 @@ class DatabaseOperatorsDataSourceTest extends TestCase
 
         $this->assertDatabaseHas('operators', $operatorTestDataBuilder->toDatabaseArray());
     }
+
+    #[Test]
+    public function failsToSaveOperators(): void
+    {
+        $operatorTestDataBuilder = new OperatorTestDataBuilder();
+        $operators = [];
+        $operators[] = $operatorTestDataBuilder->buildInvalidOperator();
+
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Failed to update operators.');
+
+        $this->databaseOperatorsDataSource->save($operators);
+    }
 }
